@@ -21,6 +21,9 @@ diceVariance = 0
 for (i in 1:6){
   diceVariance = diceVariance + (diceProb[i] * ((diceNumbers[i] - diceMean)**2))
 }
+
+diceMean
+diceVariance
 ```
 
 ### 2) Make a function in R that “rolls” this dice; return a vector containing the rolls. So if I call:  myRolls <- rollLoadedDie(10000) I would get a vector of size 10,000 that contains the rolls of my loaded die.

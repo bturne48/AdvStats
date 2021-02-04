@@ -16,7 +16,17 @@ diceVariance = 0
 for (i in 1:6){
   diceVariance = diceVariance + (diceProb[i] * ((diceNumbers[i] - diceMean)**2))
 }
+
+diceMean
 ```
+
+    ## [1] 4.5
+
+``` r
+diceVariance
+```
+
+    ## [1] 3.25
 
 ### 2) Make a function in R that “rolls” this dice; return a vector containing the rolls. So if I call: myRolls &lt;- rollLoadedDie(10000) I would get a vector of size 10,000 that contains the rolls of my loaded die.
 
@@ -31,7 +41,7 @@ rollLoadedDie <- function(rolls){
 rollLoadedDie(10)
 ```
 
-    ##  [1] 1 3 6 6 3 6 6 1 4 2
+    ##  [1] 6 6 5 6 6 6 6 5 2 3
 
 ### 3) Make a histogram of some large number of rolls. Do the rolls of the loaded die approximate a uniform distribution?
 
