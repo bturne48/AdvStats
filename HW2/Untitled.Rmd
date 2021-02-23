@@ -70,10 +70,16 @@ head(myVals, 25)
 
 #### (3B)	What is the expected mean and variance of the vector in (3A).  Show that the actual mean and variance are close to the expected mean and variance.
 ```{r}
+# sample mean
 myVals_mean = mean(myVals)
 myVals_mean
+# expected mean
+exMean
+# sample var
 myVals_var = var(myVals)
 myVals_var
+# expected var
+exSD
 ```
 
 #### (3C)	Take the vector that results from (3A).  For each element in that vector, calculate a p-value with binom.test(….)$p.value for the null hypothesis that the frequency of the allele in the population for that experiment is 1/2. Graph the histogram of all of those p-values. What distribution would you expect?  Is that what you see?

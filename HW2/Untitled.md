@@ -116,24 +116,40 @@ myVals = rbinom(1000, n, mut_p)
 head(myVals, 25)
 ```
 
-    ##  [1] 5057 4994 4982 5088 5032 4989 4926 5044 4967 5043 5087 4982 4966 4993 5026
-    ## [16] 4992 5051 4962 4903 4953 5027 5021 5082 5029 4915
+    ##  [1] 5028 4941 4893 5010 5049 5042 4903 4919 5071 5010 4961 5008 4936 5018 5070
+    ## [16] 5054 5025 4971 4953 5023 4993 5000 4936 5031 5016
 
 #### (3B) What is the expected mean and variance of the vector in (3A). Show that the actual mean and variance are close to the expected mean and variance.
 
 ``` r
+# sample mean
 myVals_mean = mean(myVals)
 myVals_mean
 ```
 
-    ## [1] 5001.819
+    ## [1] 5000.755
 
 ``` r
+# expected mean
+exMean
+```
+
+    ## [1] 5000
+
+``` r
+# sample var
 myVals_var = var(myVals)
 myVals_var
 ```
 
-    ## [1] 2498.443
+    ## [1] 2324.626
+
+``` r
+# expected var
+exSD
+```
+
+    ## [1] 2500
 
 #### (3C) Take the vector that results from (3A). For each element in that vector, calculate a p-value with binom.test(….)$p.value for the null hypothesis that the frequency of the allele in the population for that experiment is 1/2. Graph the histogram of all of those p-values. What distribution would you expect? Is that what you see?
 
