@@ -1,0 +1,169 @@
+---
+title: "HW3"
+author: "Brandon Turner"
+date: "3/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1) You walk into the “occasionally dishonest casino”  with prior probabilities and likelihoods set to the values in slides 21-25 of lecture #4. (that is, a “loaded” die has a 10% chance of getting a 1-5 and a 50% chance of getting a 6 but 99% of the dice are fair). Make a graph of the posterior probability that you have picked up a loaded die as a function of the number of times you have rolled the die.
+
+Probability of loaded dice = p(loaded) = 1/100
+Probability of rolling 6 if loaded = p(roll 6| loaded) = 1/2 * 1/100
+Probability of rolling 6 if loaded = p(roll 6| not loaded) = 1/6 * 99/100
+
+
+```{r}
+# probs
+p_loaded = c(0.01, 0.99)
+likeli_givenLoaded = c(rep(1/10, 5), 1/2)
+likeli_givenNotLoaded = c(rep(1/6, 6))
+
+# oops i dont need a sim
+loadedSim = c(2,3,2,6,3,5,6,2,6,6,2,6,6,2,3,6,6,6,5,6,6,5,6,6,6,6,6,4,6,3,3,3,6,6,5,6,6)
+
+probRollVals <- vector();
+
+titleStr <- ""
+for( i in 1:length(loadedSim))
+{
+	probRollVals[i] <- p_loaded[1];
+	
+	denom <- p_loaded[1] * likeli_givenLoaded[loadedSim[i]] + p_loaded[2] * likeli_givenNotLoaded[loadedSim[i]];
+	
+	p_loaded[1] = p_loaded[1] * likeli_givenLoaded[loadedSim[i]] / denom;
+	p_loaded[2] = p_loaded[2] * likeli_givenNotLoaded[loadedSim[i]] / denom;
+	
+	titleStr <- paste(titleStr,loadedSim[i],sep="")
+	
+}
+plot(1:i,probRollVals, main = titleStr,ylim=c(0,1),xlim=c(1,length(loadedSim)+1))
+
+```
+
+
+#### 1B) How many times on average would you need to roll a loaded die to be 99.999%  sure that it was loaded?  
+
+need to show: p(loaded | # of sixes in loaded sim)
+```{r}
+# check how many runs it takes until we are confidednt that it is loaded, 99%
+for (i in 1:50){
+  
+  loadedGivenNumberOfSixes = (0.5**i * 0.01)/((0.5**i * 0.01) + (1/6**i * .99))
+  print(paste(i, 'Sixes seen =', loadedGivenNumberOfSixes))
+  
+  if (loadedGivenNumberOfSixes > 0.9999){
+    break
+  }
+}
+```
+
+
+### 2) You are consulting for a hospital.  They have a diagnostic test for a disease with a known background prevalence of 0.1%. The test has the following properties: p(positive result | person has disease) = 0.91, p(negative result| person does not have disease) = 0.84. The cost of running the test one time is $1.  The test can be repeated for each patient and the results of the test are independent of one another allowing for Bayesian updates.  The test always yields a positive or negative result.The requirement of the hospital is that the test is repeated for each patient until a Bayesian posterior of at least 0.99999 is reached.
+
+#### 2A)Run simulations for a patient with the disease.  About how many times on average must the test be repeated to achieve the hospital’s requirements?  
+```{r}
+hasDisease = c(0.001, 0.999)
+positiveTestDisease = c(0.91, 0.09)
+positiveTestNoDisease = c(0.16, 0.84)
+
+# check how many runs it takes until we are confidednt that it is loaded, 99%
+howManyTests = function(positiveTest, disease, positiveResults){
+  for (i in 1:10000){
+  
+    result = (positiveTest[1]**i * disease[1])/((positiveTest[1]**i * disease[1]) + (positiveTest[2]**i * hasDisease[2]))
+    
+    if ( result > 0.9999 & positiveResults==TRUE){
+      print(paste('It takes', i, 'tests for 99% sure of positive result'))
+      break
+    } 
+    if ( result < 1-0.9999 & positiveResults==FALSE){
+      print(paste('It takes', i, 'tests for 99% sure of negative result'))
+      break
+    }
+    
+  }
+}
+
+howManyTests(positiveTestDisease, hasDisease, TRUE)
+
+```
+
+#### 2B) Repeat the simulations for a patient without the disease.  About how many times on average must the test be repeated to achieve the hospital’s requirements?
+```{r}
+howManyTests(positiveTestNoDisease, hasDisease, FALSE)
+```
+
+#### 2C) The hospital plans to run the test on one million patients per year.  At a cost of $1 per test, about how much should the hospital budget to run these tests?  (That is to say, for a million patients, how many tests can the hospital anticipate running?)
+The probability of a postive test is 
+```{r}
+(0.91 * 0.001) + (0.999 * 0.16)
+```
+
+The probability of a ngeative test is 
+```{r}
+(0.09 * 0.001) + (0.999 * 0.84)
+```
+
+So of 1,000,000 people we E(positve tests) = 160,750 , and E(negative tests) = 839,250
+
+If it takes 7 tests to verify positve E(cost of positive) = \$1,125,250 , and 2 test to verify negative E(cost of negative) = \$1,678,500
+
+So the hosplital can expect to run 2,803,750 tests.
+
+### 3) Another manufacturer approaches the hospital with an improved, but more expensive, test with the following properties: p(positive result | person has disease) = 0.96, p(negative result| person does not have disease) = 0.95
+
+#### 3A) With this test, how many times on average must the test be repeated to achieve the hospital’s requirements for patients with and without the disease?
+```{r}
+hasDisease = c(0.001, 0.999)
+positiveTestDisease = c(0.96, 0.04)
+positiveTestNoDisease = c(0.05, 0.95)
+
+# check how many runs it takes until we are confidednt that it is loaded, 99%
+howManyTests = function(positiveTest, disease, positiveResults){
+  for (i in 1:10000){
+  
+    result = (positiveTest[1]**i * disease[1])/((positiveTest[1]**i * disease[1]) + (positiveTest[2]**i * hasDisease[2]))
+    
+    if ( result > 0.9999 & positiveResults==TRUE){
+      print(paste('It takes', i, 'tests for 99% sure of positive result'))
+      break
+    } 
+    if ( result < 1-0.9999 & positiveResults==FALSE){
+      print(paste('It takes', i, 'tests for 99% sure of negative result'))
+      break
+    }
+    
+  }
+}
+
+howManyTests(positiveTestDisease, hasDisease, TRUE)
+howManyTests(positiveTestNoDisease, hasDisease, FALSE)
+```
+
+#### 3B) Considering only the cost of the test, and assuming the hospital will screen one million   patients with a background prevalence of 0.1%, at about what price point for running the test one time will the hospital save money by switching to the new test?  
+The probability of a postive test is 
+```{r}
+# probability of pos and neg test 
+p_positiveTest = (0.96 * 0.001) + (0.999 * 0.05)
+p_negativeTest = (0.04 * 0.001) + (0.999 * 0.95)
+
+# how many tests will you need
+ex_pos = p_positiveTest * 1000000
+ex_neg = p_negativeTest * 1000000
+
+# six tests needed for a positve confirmation
+testsNeeded = (ex_pos * 6) + (ex_neg)
+
+# divided the number of tests needed for the old test by the new
+print(2803750/testsNeeded)
+```
+
+
+
+
+
+
