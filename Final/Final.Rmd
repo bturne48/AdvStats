@@ -2,7 +2,7 @@
 title: "Structural Variation in *Drosophila santomea*"
 author: "Brandon Turner"
 date: "4/22/2021"
-output: html_document
+output: rmarkdown::github_document
 ---
 ### Introduction
 

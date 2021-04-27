@@ -2,7 +2,7 @@
 title: "HW4"
 author: "Brandon Turner"
 date: "3/25/2021"
-output: html_document
+output: rmarkdown::github_document
 ---
 ### 1A) Plot the prior graph for a situation for a coin where the prior belief for p(head) is represented by the following R code : dexp(x, rate =5) / 0.9932621 for values of 0 <= x <= 1 and 0 otherwise.  (We choose the denominator to make the Integral between 0 and 1 sum to 1).
 ```{r}
