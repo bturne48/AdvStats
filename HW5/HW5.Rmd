@@ -1,0 +1,88 @@
+---
+title: "HW5"
+author: "Brandon Turner"
+date: "4/12/2021"
+output: html_document
+---
+
+## 1)	We will utilize our RNA seq dataset of E. Coli genes from mice.  Read and normalize the counts table ( “nc101_scaff_dataCounts.txt “ into R).
+
+```{r}
+# read in data
+myData = read.table('/Users/bturne48/Documents/GitHub/AdvStats/HW5/longitdunalRNASeqData/nc101_scaff_dataCounts.txt', header = T, row.names = 1, sep ='\t', colClasses = c('character', rep('numeric', 11)))
+
+# remove rare genes
+myData = myData[apply(myData,1,median) > 5, ]
+
+# normalize
+myData_norm = myData
+for (i in 1:ncol(myData)){
+  colSum = sum(myData[,1])
+  myData_norm[,i] = myData_norm[,i]/colSum
+}
+
+```
+
+## 2)	For every row in the normalized spreadsheet, run three t-tests ( “day 2” vs. “week 12”, “day 2” vs. “week 18” and “week 12” vs. “week 18”.  At a p < .05 threshold fill in the following table:
+
+```{r}
+# uncorrected ounts
+y1_uncor = 0
+y1_pval = c()
+y2_uncor = 0
+y2_pval = c()
+y3_uncor = 0
+y3_pval = c()
+for (i in 1:nrow(myData_norm)){
+  # day 2 vs week 12
+  x1 = t.test(myData[i,1:3], myData[i,4:6])
+  y1_pval[i] = x1$p.value
+  if (x1$p.value < 0.05){
+    y1_uncor = y1_uncor + 1
+  }
+  
+  # day 2 vs week 18
+  x2 = t.test(myData[i,1:3], myData[i,7:11])
+  y2_pval[i] = x2$p.value
+  if (x2$p.value < 0.05){
+    y2_uncor = y2_uncor + 1
+  }
+  
+  # week 12 vs week 18
+  x3 = t.test(myData[i,4:6], myData[i,7:11])
+  y3_pval[i] = x3$p.value
+  if (x3$p.value < 0.05){
+    y3_uncor = y3_uncor + 1
+  }
+  
+}
+uncorrected_res = c(y1_uncor, y2_uncor, y3_uncor)
+
+
+# FDR corrected
+fdr_corrected_res = c(sum(p.adjust(y1_pval, 'fdr') < 0.1), sum(p.adjust(y2_pval, 'fdr') < 0.1), sum(p.adjust(y3_pval, 'fdr') < 0.1))
+
+
+# Bon corrected
+threshold = 0.05/length(myData_norm)
+bonf_corrected_res = c(sum(p.adjust(y1_pval, "bonferroni") <= threshold), sum(p.adjust(y2_pval, "bonferroni") <= threshold), sum(p.adjust(y3_pval, "bonferroni") <= threshold))
+
+
+# results df 
+endTable = data.frame(uncorrected_res, fdr_corrected_res, bonf_corrected_res)
+endTable
+```
+
+## 3)	Make histograms of all the uncorrected p-values for each of the three companions.  Are any of the distributions uniform?
+
+```{r}
+hist(y1_pval, main ='Day 2 vs Week 12')
+hist(y2_pval, main ='Day 2 vs Week 18')
+hist(y3_pval, main ='Week 12 vs Week 18')
+```
+
+None of the histrograms appear to show a unif dist
+
+## 4) Based on these data, when is the biggest shift in the transcriptome?  Which samples are most different from one another?
+
+Day 2 vs Week 18 shows the most values in column 1 of the histogram having the highest count. 
