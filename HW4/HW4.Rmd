@@ -12,7 +12,7 @@ plot(seqs, myFunct(seqs))
 
 ```
 
-### 1B) Calculate the posterior graph with both the Metropolis algorithm and grid approximation for a case with 14 heads and 10 tails (where x = prob(head)) .Show the two methods roughly agree.  Compare these to a plot with a posterior for new data of 14 heads and 10 tails with a prior with beta(40,40).
+### 1B) Calculate the posterior graph with both the Metropolis algorithm and grid approximation for a case with 14 heads and 10 tails (where x = prob(head)) .Show the two methods roughly agree.  Compare these to a plot with a posterior for new data of 14 heads and 10 tails with a prior with beta(40,40). 
 (So for the observation of 14 heads and 10 tails you will end up with a graph with three plots superimposed: (i) the Metropolis algorithm with an exp prior, (ii) grid approximation with an exp prior and (iii) exact analytical solution from a beta(40,40) prior make the plots different colors so you can visualize them…)
 
 ```{r}
@@ -91,7 +91,7 @@ for( i in 1:numIterations )
 {
 
   # metro post
-	pOld <- dbinom( 583, 417, piOld) * (dexp(piOld, rate=5)/0.9932621)
+	pOld <- dbinom( 583, 583+417, piOld) * (dexp(piOld, rate=5)/0.9932621)
   
 	piNew <- piOld + rnorm(1, 0, sd =0.01);
 	
@@ -101,7 +101,7 @@ for( i in 1:numIterations )
 	if( piNew < 0 ) 
 		piNew = 0;
 		
-	pNew <- dbinom( 583, 417, piNew) * (dexp(piNew, rate=5)/0.9932621)
+	pNew <- dbinom( 583, 583+417, piNew) * (dexp(piNew, rate=5)/0.9932621)
 	
 	ratio <- pNew / pOld
 	
@@ -126,18 +126,18 @@ sum <- 0;
 # grid algo 
 for( x in xVals )
 {
-	posteriorDistGrid[i] <- (dexp(x, rate=5)/0.9932621) * dbinom( 583, 417, x)
+	posteriorDistGrid[i] <- (dexp(x, rate=5)/0.9932621) * dbinom( 583, 583+417, x)
 	sum = sum + posteriorDistGrid[i];
 	i <- i + 1;	
 }
 
 # plot beta 
-dbetasum = sum(dbeta(myHist$mids, 40+10, 40+583))
-lines( myHist$mids, dbeta(myHist$mids, 40+583, 40+10)/dbetasum, col="red")
+dbetasum = sum(dbeta(myHist$mids, 40+583, 40+417))
+lines( myHist$mids, dbeta(myHist$mids, 40+583, 40+417)/dbetasum, col="red")
 
 # plot grid
 plot(posteriorDistGrid/sum)
 gridHist = hist(posteriorDistGrid, breaks=200, plot=FALSE)
-lines( gridHist$mids, gridHist$counts)
+lines( gridHist$mids, dbeta(gridHist$mids, 40+583, 40+417)/dbetasum, col="red")
 ```
 

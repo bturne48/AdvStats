@@ -12,12 +12,12 @@ output: rmarkdown::github_document
 myData = read.table('/Users/bturne48/Documents/GitHub/AdvStats/HW5/longitdunalRNASeqData/nc101_scaff_dataCounts.txt', header = T, row.names = 1, sep ='\t', colClasses = c('character', rep('numeric', 11)))
 
 # remove rare genes
-myData = myData[apply(myData,1,median) > 5, ]
+myData = myData[apply(myData, 1, median) > 5, ]
 
 # normalize
 myData_norm = myData
 for (i in 1:ncol(myData)){
-  colSum = sum(myData[,1])
+  colSum = sum(myData[,i])
   myData_norm[,i] = myData_norm[,i]/colSum
 }
 head(myData_norm)
@@ -36,23 +36,20 @@ y3_uncor = 0
 y3_pval = c()
 for (i in 1:nrow(myData_norm)){
   # day 2 vs week 12
-  x1 = t.test(myData[i,1:3], myData[i,4:6])
-  y1_pval[i] = x1$p.value
-  if (x1$p.value < 0.05){
+  y1_pval[i] = t.test(myData_norm[i,1:3], myData_norm[i,4:6])$p.value
+  if (y1_pval[i] <= 0.05) {
     y1_uncor = y1_uncor + 1
   }
   
   # day 2 vs week 18
-  x2 = t.test(myData[i,1:3], myData[i,7:11])
-  y2_pval[i] = x2$p.value
-  if (x2$p.value < 0.05){
+  y2_pval[i] = t.test(myData_norm[i,1:3], myData_norm[i,7:11])$p.value
+  if (y2_pval[i] <= 0.05) {
     y2_uncor = y2_uncor + 1
   }
   
   # week 12 vs week 18
-  x3 = t.test(myData[i,4:6], myData[i,7:11])
-  y3_pval[i] = x3$p.value
-  if (x3$p.value < 0.05){
+  y3_pval[i] = t.test(myData_norm[i,4:6], myData_norm[i,7:11])$p.value
+  if (y3_pval[i] <= 0.05) {
     y3_uncor = y3_uncor + 1
   }
   
@@ -61,12 +58,14 @@ uncorrected_res = c(y1_uncor, y2_uncor, y3_uncor)
 
 
 # FDR corrected
-fdr_corrected_res = c(sum(p.adjust(y1_pval, 'fdr') < 0.1), sum(p.adjust(y2_pval, 'fdr') < 0.1), sum(p.adjust(y3_pval, 'fdr') < 0.1))
+x = sum(p.adjust(y1_pval, 'BH') < 0.05)
+y = sum(p.adjust(y2_pval, 'BH') < 0.05) 
+z = sum(p.adjust(y3_pval, 'BH') < 0.05)
+fdr_corrected_res = c(x,y,z)
 
 
 # Bon corrected
-threshold = 0.05/length(myData_norm)
-bonf_corrected_res = c(sum(p.adjust(y1_pval, "bonferroni") <= threshold), sum(p.adjust(y2_pval, "bonferroni") <= threshold), sum(p.adjust(y3_pval, "bonferroni") <= threshold))
+bonf_corrected_res = c(sum(p.adjust(y1_pval, "bonferroni") <= 0.05), sum(p.adjust(y2_pval, "bonferroni") <= 0.05), sum(p.adjust(y3_pval, "bonferroni") <= 0.05))
 
 
 # results df 
@@ -77,13 +76,21 @@ endTable
 ## 3)	Make histograms of all the uncorrected p-values for each of the three companions.  Are any of the distributions uniform?
 
 ```{r}
-hist(y1_pval, main ='Day 2 vs Week 12')
-hist(y2_pval, main ='Day 2 vs Week 18')
-hist(y3_pval, main ='Week 12 vs Week 18')
+# use breaks=20 so that the counts field in the histogram can be parsed (hist[1:2] = all pvals < 0.05)
+hist1 = hist(y1_pval, main ='Day 2 vs Week 12', breaks = 20)
+hist2 = hist(y2_pval, main ='Day 2 vs Week 18', breaks = 20)
+hist3 = hist(y3_pval, main ='Week 12 vs Week 18', breaks = 20)
 ```
 
 None of the histrograms appear to show a unif dist
 
 ## 4) Based on these data, when is the biggest shift in the transcriptome?  Which samples are most different from one another?
+```{r}
+# sum all pvals below 0.05 for all 3 comparisons
+sum(hist1$counts[1:2])
+sum(hist2$counts[1:2])
+sum(hist3$counts[1:2])
+```
 
-Day 2 vs Week 18 shows the most values in column 1 of the histogram having the highest count. 
+
+Day 2 vs Week 18 shows the most values that show p < 0.05. 

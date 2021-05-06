@@ -82,7 +82,7 @@ plot(allPvals)
 hist(allPvals)
 
 # FDR corrected
-fdr_corrected_res = sum(p.adjust(allPvals, 'fdr') < 0.1)
+fdr_corrected_res = sum(p.adjust(allPvals, 'BH') < 0.05)
 fdr_corrected_res
 ```
 The p-vals do appear to be uniformally distributed, suggesting that the OTU's arent having much of an effect.

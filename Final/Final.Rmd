@@ -10,6 +10,12 @@ The appearance of new genes through the reorganization of existing genetic mater
 
 I speculate that **Hypothesis 1:** The distribution of the allele frequency for the rearrangement's is significantly different between the 3 populations, **Hypothesis 2:** In all populations, there is a positive correlation between the FST/deltap, where FST is calculated on Mainland Dyak and Island Dsant, and **Hypothesis 3 :** Deltap is significanlty different when comparing *D.sant* and *D.yak*.
 
+Recent technological innovation has allowed us to identify such variation in high throughput large scale genome sequencing panels, opening doors to study evolutionary impacts in new organisms or systems beyond standard models.  We are able to discover how these mutations contribute to population variation and how their allele frequencies shift in differing environmental contexts.   One evolutionary system that has experienced such habitat shifts is the \Dyak-\Dsant {} species complex.  As a common model organism, \textit{Drosophila} remain an excellent resource for evolutionary analysis. \textit{D. yakuba} and \textit{D. santomea} are two sister species of \textit{Drosophila} that live on Sao Tome, an island off the coast of west Africa (Lachaise, D. et al 2000). These two species inhabit separate elevations on the island, with \textit{D. santomea} living in higher elevations and absent in the lower regions of the island where \textit{D. yakuba} is abundant. They do have a contact zone in the middle, however, where hybrids can occur. This provides a unique opportunity to study and understand genetic variation between two closely related species. 
+
+This complex is ideal for population genetics of local adaptation as it has invaded far enough in the past that phenotypic and genetic differentiation can occur.  However, it is not yet so long in the past that population genetic signals are obscured by new mutations and left to be seen only in species divergence.   It further benefits from a known ancestral mainland population that is well characterized for structural variation.  To build on these clear strengths of the \textit{D. yakuba}-\textit{D. santomea} system, we have generated population genetic panels for \textit{D. yakuba} and \textit{D. santomea} Sao Tome with paired end Illlumina and PacBio HiFi sequencing.  We pair these data with gene expression analysis to identify cases where structural variants alter expression or create new genes.  This comprehensive portrait of structural variation in local adaptation on \Stome 
+
+
+
 
 ### Methods
 
