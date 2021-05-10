@@ -2,7 +2,7 @@
 title: "HW7"
 author: "Brandon Turner"
 date: "4/30/2021"
-output: rmarkdown::github_document
+output: html_document
 ---
 
 ### 1A)	We again return to our RNA seq dataset of E. Coli genes from mice. As before, read and normalize the counts table ( “nc101_scaff_dataCounts.txt “ into R).	For each row in the spreadsheet, perform a one-way ANOVA with categories “day 2”, “week 12” and “week 18”.  Plot out the histogram of all p-values.  How many genes are significant at a BH FDR-corrected 0.05 threshold. 

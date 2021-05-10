@@ -2,7 +2,7 @@
 title: "HW5"
 author: "Brandon Turner"
 date: "4/12/2021"
-output: rmarkdown::github_document
+output: html_document
 ---
 
 ## 1)	We will utilize our RNA seq dataset of E. Coli genes from mice.  Read and normalize the counts table ( “nc101_scaff_dataCounts.txt “ into R).

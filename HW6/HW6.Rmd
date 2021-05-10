@@ -2,7 +2,7 @@
 title: "HW6"
 author: "Brandon Turner"
 date: "4/28/2021"
-output: rmarkdown::github_document
+output: html_document
 ---
 ### 1A) Download the data from here examining the relationship between the number of cell divisions and cancer risk. On a log10-log10 scale graph Lifetime_cancer_risk (on the y-axis) vs. CumulativeCellDivisions (on the x-axis).  (This reproduces Fig. 1 from the paper).
 
